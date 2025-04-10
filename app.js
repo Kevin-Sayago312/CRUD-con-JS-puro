@@ -1,134 +1,48 @@
-let listaEmpleados = [];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-const objEmpleado = {
-    id: '',
-    nombre: '',
-    puesto: ''
-}
+ // Your web app's Firebase configuration
+const firebaseConfig = {
+apiKey: "AIzaSyAhcBoskVSV7c5zubdPyBEdMFOxMoexV2Q",
+authDomain: "test-3324e.firebaseapp.com",
+projectId: "test-3324e",
+storageBucket: "test-3324e.firebasestorage.app",
+messagingSenderId: "1080633562766",
+appId: "1:1080633562766:web:d18fa739b0a01fd16edbdf"
+};
 
-let editando = false;
 
-const formulario = document.querySelector('#formulario');
-const nombreInput = document.querySelector('#nombre');
-const puestoInput = document.querySelector('#puesto');
-const btnAgregar = document.querySelector('#btnAgregar');
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const productosRef = collection(db, "productos");
 
-formulario.addEventListener('submit', validarFormulario);
-
-function validarFormulario(e) {
-
-    if (nombreInput.value === '' || puestoInput.value === '') {
-        mostrarMensaje('Todos los campos son obligatorios', 'danger');
-        return;
-    }
-    if (editando) {
-        editarEmpleado();
-        editando = false;
-    } else {
-        objEmpleado.id = Date.now();
-        objEmpleado.nombre = nombreInput.value;
-        objEmpleado.puesto = puestoInput.value;
-
-        agregarEmpleado();
+async function agregarProducto() {
+    const nombre = document.getElementById("nombre").value;
+    const precio = document.getElementById("precio").value;
+    if (nombre && precio) {
+        await addDoc(productosRef, { nombre, precio });
+        cargarProductos();
     }
 }
 
-function agregarEmpleado() {
-    listaEmpleados.push({ ...objEmpleado });
-
-    mostrarEmpleados();
-
-    formulario.reset();
-
-    limpiarObjeto();
-}
-
-function limpiarObjeto() {
-    objEmpleado.id = '';
-    objEmpleado.nombre = '';
-    objEmpleado.puesto = '';
-}
-
-function mostrarEmpleados() {
-
-    limpiarHTML();
-
-    const divEmpleados = document.querySelector('.div-empleados');
-
-    listaEmpleados.forEach(empleado => {
-        const { id, nombre, puesto } = empleado;
-
-        //? Aqui se crea un elemento HTML para cada empleado (SE MUESTRA EN PANTALLA)
-        const parrafo = document.createElement('p');
-        parrafo.textContent = ` ${id} - ${nombre} - ${puesto} -`;
-        parrafo.dataset.id = id;
-
-        const editarBoton = document.createElement('button');
-        editarBoton.onclick = () => cargarEmpleado(empleado);
-        editarBoton.textContent = 'Editar';
-        editarBoton.classList.add('btn', 'btn-editar');
-        parrafo.append(editarBoton);
-
-        const eliminarBoton = document.createElement('button');
-        eliminarBoton.onclick = () => eliminarEmpleado(id);
-        eliminarBoton.textContent = 'Eliminar';
-        eliminarBoton.classList.add('btn', 'btn-eliminar');
-        parrafo.append(eliminarBoton);
-
-        const hr = document.createElement('hr');
-
-        divEmpleados.appendChild(parrafo);
-        divEmpleados.appendChild(hr);
+async function cargarProductos() {
+    const lista = document.getElementById("listaProductos");
+    lista.innerHTML = "";
+    const querySnapshot = await getDocs(productosRef);
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        lista.innerHTML += `<li class='list-group-item d-flex justify-content-between'>
+            ${data.nombre} - $${data.precio} 
+            <button class='btn btn-danger btn-sm' onclick="eliminarProducto('${doc.id}')">Eliminar</button>
+        </li>`;
     });
 }
 
-function cargarEmpleado(empleado) {
-    const { id, nombre, puesto } = empleado;
-
-    nombreInput.value = nombre;
-    puestoInput.value = puesto;
-
-    objEmpleado.id = id;
-
-    formulario.querySelector('button[type="submit"]').textContent = 'Actualizar';
-
-    editando = true;
+async function eliminarProducto(id) {
+    await deleteDoc(doc(db, "productos", id));
+    cargarProductos();
 }
 
-function editarEmpleado() {
-    objEmpleado.nombre = nombreInput.value;
-    objEmpleado.puesto = puestoInput.value;
-
-    listaEmpleados.map(empleado => {
-        if (empleado.id === objEmpleado.id) {
-            empleado.id = objEmpleado.id;
-            empleado.nombre = objEmpleado.nombre;
-            empleado.puesto = objEmpleado.puesto;
-        }
-    });
-
-    limpiarHTML();
-    mostrarEmpleados();
-
-    formulario.reset();
-
-    formulario.querySelector('button[type="submit"]').textContent = 'Agregar';
-
-    editando = false;
-}
-
-function eliminarEmpleado(id) {
-    listaEmpleados = listaEmpleados.filter(empleado => empleado.id !== id);
-
-    limpiarHTML();
-    mostrarEmpleados();
-}
-
-
-
-function limpiarHTML(){
-    const divEmpleados = document.querySelector('.div-empleados');
-    while (divEmpleados.firstChild) {
-        divEmpleados.removeChild(divEmpleados.firstChild);
-    }
-}
+window.agregarProducto = agregarProducto;
+window.eliminarProducto = eliminarProducto;
+window.onload = cargarProductos;

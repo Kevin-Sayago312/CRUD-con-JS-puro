@@ -7,17 +7,64 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
+    <!--! Inicia el Navbar-->
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Inicio</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="catalogo.html">Catálogo</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Features</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Pricing</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle disabled" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Dropdown link
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+    </header>
+    <!--! Termina el Navbar-->
+
+    <div class="container mt-3 card p-3">
         <h1 class="text-center">Gestión de Productos</h1>
-        <div class="card p-3">
-            <h5>Agregar Producto</h5>
-            <input type="text" id="nombre" class="form-control my-2" placeholder="Nombre del producto">
-            <input type="number" id="precio" class="form-control my-2" placeholder="Precio">
-            <button class="btn btn-primary" onclick="agregarProducto()">Agregar</button>
+        <div class="mb-3">
+            <label class="form-label">Producto</label>
+            <input type="text" class="form-control mb-3" id="nombre" placeholder="Nombre del producto" required>
+
+            <label class="form-label">Descripción del producto</label>
+            <textarea class="form-control mb-3" id="descripcion" rows="3" placeholder="Tenis deportivos color negro marca..."></textarea>
+
+            <label class="form-label">Precio</label>
+            <input type="number" class="form-control mb-3" id="precio" placeholder="Precio del producto" required>
+
+            <label class="form-label">Imagen del producto</label>
+            <input class="form-control" type="file" id="imagen" accept="image/*">
         </div>
+        <button type="submit" class="btn btn-primary" onclick="agregarProducto()">Agregar</button>
+    </div>
+    
+    
+
         <h3 class="mt-4">Lista de Productos</h3>
         <ul id="listaProductos" class="list-group mt-3"></ul>
-    </div>
 
     <script type="module" src="app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

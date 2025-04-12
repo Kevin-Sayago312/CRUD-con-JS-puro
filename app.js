@@ -18,9 +18,11 @@ const productosRef = collection(db, "productos");
 
 async function agregarProducto() {
     const nombre = document.getElementById("nombre").value;
+    const descripcion = document.getElementById("descripcion").value;
     const precio = document.getElementById("precio").value;
+    const imagen = document.getElementById("imagen").value;
     if (nombre && precio) {
-        await addDoc(productosRef, { nombre, precio });
+        await addDoc(productosRef, { nombre, descripcion, precio, imagen });
         cargarProductos();
     }
 }
@@ -32,7 +34,7 @@ async function cargarProductos() {
     querySnapshot.forEach((doc) => {
         const data = doc.data();
         lista.innerHTML += `<li class='list-group-item d-flex justify-content-between'>
-            ${data.nombre} - $${data.precio} 
+            ${data.nombre} - ${data.descripcion} - $${data.precio} - <img src='${data.imagen}' alt='${data.nombre}' style='width: 50px; height: 50px;'>
             <button class='btn btn-danger btn-sm' onclick="eliminarProducto('${doc.id}')">Eliminar</button>
         </li>`;
     });

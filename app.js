@@ -34,7 +34,7 @@ async function cargarProductos() {
     querySnapshot.forEach((doc) => {
         const data = doc.data();
         lista.innerHTML += `<li class='list-group-item d-flex justify-content-between'>
-            ${data.nombre} - ${data.descripcion} - $${data.precio} - <img src='${data.imagen}' alt='${data.nombre}' style='width: 50px; height: 50px;'>
+            ${data.nombre} - ${data.descripcion} - $${data.precio} - ${data.imagen} 
             <button class='btn btn-danger btn-sm' onclick="eliminarProducto('${doc.id}')">Eliminar</button>
         </li>`;
     });
